@@ -1,0 +1,15 @@
+[Unit]
+Description=led blinking service
+
+[Service]
+Type=simple
+User=root
+ExecStart=##SMARTBMS_GIT_DIRECTORY##/smartbms_monitor.py
+Restart=always
+RestartSec=5
+StartLimitBurst=5
+StartLimitInterval=1m
+StartLimitAction=reboot
+
+[Install]
+WantedBy=multi-user.target
