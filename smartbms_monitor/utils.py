@@ -1,5 +1,6 @@
 import binascii
 import struct
+import sys
 
 bytemap = {
     "total_voltage": {"type":'number',"bytes":[0,1,2],"scale":0.005,"offset":0,"unit":"V"},
@@ -58,8 +59,10 @@ def print_packet(packet):
     """
     Print out a packet for debugging.
     """
+    print('')
     for b in packet:
-        print(hex(b), end='')
+        sys.stdout.write(hex(b))
+    print('')
 
 def decode(packet):
     """
