@@ -14,6 +14,7 @@ port = serial.Serial(
 )
 port.reset_input_buffer()
 
+cell_voltages = {}
 
 while True:
     # wait for start bit
@@ -30,5 +31,12 @@ while True:
     rcv = rcv[-58:]
     rcv = bytearray([i>>1 for i in rcv])
     if check_checksum(rcv):
-        print(decode(rcv))
+
+        output = decode(rcv)
+
+        cell_voltages[output['info_cell_number']] = output['cell_voltage']
+        stage_of_charge = output['state_of_charge']
+
+        print(cell_voltages)
+        print(stage_of_charge)
         
