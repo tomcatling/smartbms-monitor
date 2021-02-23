@@ -1,6 +1,9 @@
 import serial
+import boto3
+import time
 from smartbms_monitor.utils import decode, check_checksum, print_packet
 
+client = boto3.client('timestream-write')
 port = serial.Serial(
     "/dev/ttyS0", 
     parity=serial.PARITY_NONE, 
@@ -13,8 +16,6 @@ port = serial.Serial(
     dsrdtr = 0
 )
 port.reset_input_buffer()
-
-cell_voltages = {}
 
 while True:
     # wait for start bit
@@ -34,11 +35,51 @@ while True:
 
         output = decode(rcv)
 
-        cell_voltages[output['info_cell_number']] = output['cell_voltage']+0.635 # correction for missing bit
+        cell_voltage = output['cell_voltage']+0.635
         stage_of_charge = output['state_of_charge']
         total_voltage = output['total_voltage']+0.635
+        time_in_seconds = time.time()
 
         print(cell_voltages)
         print(total_voltage)
         print(stage_of_charge)
         
+        response = client.write_records(
+            DatabaseName='BroadBeanBMS',
+            TableName='StatusUpdates',
+            Records=[
+                {
+                    'MeasureName': 'TotalVoltage',
+                    'MeasureValue': total_voltage,
+                    'MeasureValueType': 'DOUBLE',
+                    'Time': time_in_seconds,
+                    'TimeUnit': 'SECONDS',
+                    'Version': 123
+                },
+                {
+                    'Dimensions': [
+                        {
+                            'Name': 'CellNumber',
+                            'Value': output['info_cell_number'],
+                            'DimensionValueType': 'VARCHAR'
+                        },
+                    ],
+                    'MeasureName': 'CellVoltage',
+                    'MeasureValue': cell_voltage,
+                    'MeasureValueType': 'DOUBLE',
+                    'Time': time_in_seconds,
+                    'TimeUnit': 'SECONDS',
+                    'Version': 123
+                },
+                {
+                    'MeasureName': 'StateOfCharge',
+                    'MeasureValue': stage_of_charge,
+                    'MeasureValueType': 'DOUBLE',
+                    'Time': time_in_seconds,
+                    'TimeUnit': 'SECONDS',
+                    'Version': 123
+                },
+            ]
+        )
+
+        time.sleep(1)
