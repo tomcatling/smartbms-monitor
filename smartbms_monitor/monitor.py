@@ -34,9 +34,9 @@ while True:
 
         output = decode(rcv)
 
-        cell_voltages[output['info_cell_number']] = output['cell_voltage']
+        cell_voltages[output['info_cell_number']] = output['cell_voltage']+0.635 # correction for missing bit
         stage_of_charge = output['state_of_charge']
-        total_voltage = output['total_voltage']
+        total_voltage = output['total_voltage']+0.635
 
         print(cell_voltages)
         print(total_voltage)

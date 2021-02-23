@@ -1,4 +1,3 @@
-
 import utils
 
 test_packet = bytearray(
