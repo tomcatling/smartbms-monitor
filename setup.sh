@@ -1,7 +1,8 @@
 #!/bin/bash
 
+sudo python setup.py install
+
 cp smartbms_monitor.service /etc/systemd/system/smartbms_monitor.service
-sed -i "s/##SMARTBMS_GIT_DIRECTORY##/$(pwd)/g" /etc/systemd/system/smartbms_monitor.service
 chmod +x /etc/systemd/system/smartbms_monitor.service
 systemctl daemon-reload
 

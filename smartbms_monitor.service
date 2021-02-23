@@ -4,7 +4,7 @@ Description=led blinking service
 [Service]
 Type=simple
 User=root
-ExecStart=##SMARTBMS_GIT_DIRECTORY##/smartbms_monitor.py
+ExecStart=python -m smartbms_monitor.monitor
 Restart=always
 RestartSec=5
 StartLimitBurst=5
