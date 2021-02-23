@@ -39,6 +39,6 @@ while True:
         total_voltage = output['total_voltage']
 
         print(cell_voltages)
-        print()
+        print(total_voltage)
         print(stage_of_charge)
         
