@@ -1,6 +1,6 @@
 import serial
 
-from utils import decode 
+from utils import decode, check_checksum, print_packet
 
 port = serial.Serial(
     "/dev/ttyS0", 
@@ -10,19 +10,17 @@ port = serial.Serial(
     timeout=3.0
 )
 
+while True:
+    b = port.read()
+    print(b)
 
-
-while True:    
-
+while True:
     # wait for start bit
-    while port.read() != b'\x01':
+    while port.read() == b'\x00':
         pass
-
-    rcv = bytearray(b'')
-    while len(rcv) < 58:
-        rcv.append(port.read())
-
-    output = decode(rcv)
-
-    print(output)
+    rcv = bytearray(port.read(58))
+    print(check_checksum(rcv))
+    print_packet(rcv)
+    #output = decode(rcv)
+    #print(output['state_of_charge'])
 

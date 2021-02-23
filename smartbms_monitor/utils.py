@@ -59,7 +59,7 @@ def print_packet(packet):
     Print out a packet for debugging.
     """
     for b in packet:
-        print(hex(b))
+        print(hex(b), end='')
 
 def decode(packet):
     """
