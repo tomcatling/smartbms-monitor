@@ -51,9 +51,9 @@ while True:
             Records=[
                 {
                     'MeasureName': 'TotalVoltage',
-                    'MeasureValue': total_voltage,
+                    'MeasureValue': str(total_voltage),
                     'MeasureValueType': 'DOUBLE',
-                    'Time': time_in_seconds,
+                    'Time': str(time_in_seconds),
                     'TimeUnit': 'SECONDS',
                     'Version': 123
                 },
@@ -61,22 +61,22 @@ while True:
                     'Dimensions': [
                         {
                             'Name': 'CellNumber',
-                            'Value': output['info_cell_number'],
+                            'Value': str(output['info_cell_number']),
                             'DimensionValueType': 'VARCHAR'
                         },
                     ],
                     'MeasureName': 'CellVoltage',
-                    'MeasureValue': cell_voltage,
+                    'MeasureValue': str(cell_voltage),
                     'MeasureValueType': 'DOUBLE',
-                    'Time': time_in_seconds,
+                    'Time': str(time_in_seconds),
                     'TimeUnit': 'SECONDS',
                     'Version': 123
                 },
                 {
                     'MeasureName': 'StateOfCharge',
-                    'MeasureValue': stage_of_charge,
+                    'MeasureValue': str(stage_of_charge),
                     'MeasureValueType': 'DOUBLE',
-                    'Time': time_in_seconds,
+                    'Time': str(time_in_seconds),
                     'TimeUnit': 'SECONDS',
                     'Version': 123
                 },
