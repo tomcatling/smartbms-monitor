@@ -48,6 +48,17 @@ while True:
         response = client.write_records(
             DatabaseName='BroadBeanBMS',
             TableName='StatusUpdates',
+            CommonAttributes={
+                'Dimensions': [
+                    {
+                        'Name': 'BoatName',
+                        'Value': 'Broadbean',
+                        'DimensionValueType': 'VARCHAR'
+                    },
+                ],
+                'Time': time_in_seconds,
+                'TimeUnit': 'SECONDS',
+            },
             Records=[
                 {
                     'MeasureName': 'TotalVoltage',
