@@ -52,6 +52,8 @@ def check_checksum(packet):
     matches what we would expect.
     """
     checksum = packet[-1]
+    if all([int(i)==0 for i in packet]):
+        return False
     return checksum == gen_checksum(packet[:-1])
 
 

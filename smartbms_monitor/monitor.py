@@ -1,26 +1,33 @@
 import serial
-
 from utils import decode, check_checksum, print_packet
 
 port = serial.Serial(
     "/dev/ttyS0", 
     parity=serial.PARITY_NONE, 
+    bytesize=serial.EIGHTBITS,
     stopbits=serial.STOPBITS_ONE,
     baudrate=9600, 
-    timeout=3.0
+    timeout=1,
+    xonxoff = 0,
+    rtscts = 0,
+    dsrdtr = 0
 )
+port.reset_input_buffer()
 
-while True:
-    b = port.read()
-    print(b)
 
 while True:
     # wait for start bit
-    while port.read() == b'\x00':
+    buffer = []
+    while all([b==255 for b in buffer]):
+        buffer = [ord(port.read(1))^0xff for i in range(10)]
         pass
-    rcv = bytearray(port.read(58))
-    print(check_checksum(rcv))
-    print_packet(rcv)
-    #output = decode(rcv)
-    #print(output['state_of_charge'])
-
+    rcv = bytearray(buffer)
+    while len(rcv) < 70:
+        rcv.append((ord(port.read(1)) ^ 0xff))   
+    # cut 58 indices back from zero at the end 
+    while rcv[-1] == 255:
+        _=rcv.pop()
+    rcv = rcv[-58:]
+    if check_checksum(rcv):
+        print(decode(bytearray([i>>1 for i in rcv])))
+        
