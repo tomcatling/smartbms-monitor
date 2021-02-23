@@ -56,7 +56,7 @@ while True:
                         'DimensionValueType': 'VARCHAR'
                     },
                 ],
-                'Time': str(time_in_seconds),
+                'Time': str(int(time_in_seconds)),
                 'TimeUnit': 'SECONDS',
             },
             Records=[
