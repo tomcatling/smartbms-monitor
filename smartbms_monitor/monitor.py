@@ -40,7 +40,8 @@ while True:
         total_voltage = output['total_voltage']+0.635
         time_in_seconds = time.time()
 
-        print(cell_voltages)
+        print(output['info_cell_number'])
+        print(cell_voltage)
         print(total_voltage)
         print(stage_of_charge)
         
