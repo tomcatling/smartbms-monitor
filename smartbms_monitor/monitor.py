@@ -1,5 +1,5 @@
 import serial
-from utils import decode, check_checksum, print_packet
+from smartbms_monitor.utils import decode, check_checksum, print_packet
 
 port = serial.Serial(
     "/dev/ttyS0", 
@@ -28,6 +28,7 @@ while True:
     while rcv[-1] == 255:
         _=rcv.pop()
     rcv = rcv[-58:]
+    rcv = bytearray([i>>1 for i in rcv])
     if check_checksum(rcv):
-        print(decode(bytearray([i>>1 for i in rcv])))
+        print(decode(rcv))
         
