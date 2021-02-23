@@ -64,9 +64,6 @@ while True:
                     'MeasureName': 'TotalVoltage',
                     'MeasureValue': str(total_voltage),
                     'MeasureValueType': 'DOUBLE',
-                    'Time': str(time_in_seconds),
-                    'TimeUnit': 'SECONDS',
-                    'Version': 123
                 },
                 {
                     'Dimensions': [
@@ -79,17 +76,11 @@ while True:
                     'MeasureName': 'CellVoltage',
                     'MeasureValue': str(cell_voltage),
                     'MeasureValueType': 'DOUBLE',
-                    'Time': str(time_in_seconds),
-                    'TimeUnit': 'SECONDS',
-                    'Version': 123
                 },
                 {
                     'MeasureName': 'StateOfCharge',
                     'MeasureValue': str(stage_of_charge),
                     'MeasureValueType': 'DOUBLE',
-                    'Time': str(time_in_seconds),
-                    'TimeUnit': 'SECONDS',
-                    'Version': 123
                 },
             ]
         )
