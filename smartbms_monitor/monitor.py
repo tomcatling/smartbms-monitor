@@ -19,68 +19,28 @@ port.reset_input_buffer()
 
 while True:
     # wait for start bit
-    buffer = []
-    while all([b==0 for b in buffer]):
-        buffer = [ord(i) for i in port.read(10)]
-        pass
-    rcv = bytearray(buffer)
-    rcv.append([ord(i) for i in port.read(60)])
-    # cut 58 indices back from zero at the end 
-    while rcv[-1] == 0:
-        _=rcv.pop()
-    rcv = rcv[-58:]
+    rcv = bytearray(port.read(58))
     if check_checksum(rcv):
-
         output = decode(rcv)
+        dimensions = []
+        for k,v in output.items():
+            print(str(k) + ':  ' + str(v))
+            dimensions.append({
+                'Name':k,
+                'Value':str(v),
+            })
 
-        cell_voltage = output['cell_voltage']
-        stage_of_charge = output['state_of_charge']
-        total_voltage = output['total_voltage']
-        time_in_seconds = time.time()
-
-        print(output['info_cell_number'])
-        print(cell_voltage)
-        print(total_voltage)
-        print(stage_of_charge)
-        
         response = client.write_records(
             DatabaseName='BroadBeanBMS',
             TableName='StatusUpdates',
-            CommonAttributes={
-                'Dimensions': [
-                    {
-                        'Name': 'BoatName',
-                        'Value': 'Broadbean',
-                        'DimensionValueType': 'VARCHAR'
-                    },
-                ],
-                'Time': str(int(time_in_seconds)),
-                'TimeUnit': 'SECONDS',
-            },
             Records=[
                 {
-                    'MeasureName': 'TotalVoltage',
-                    'MeasureValue': str(total_voltage),
-                    'MeasureValueType': 'DOUBLE',
-                },
-                {
-                    'Dimensions': [
-                        {
-                            'Name': 'CellNumber',
-                            'Value': str(output['info_cell_number']),
-                            'DimensionValueType': 'VARCHAR'
-                        },
-                    ],
-                    'MeasureName': 'CellVoltage',
-                    'MeasureValue': str(cell_voltage),
-                    'MeasureValueType': 'DOUBLE',
-                },
-                {
-                    'MeasureName': 'StateOfCharge',
-                    'MeasureValue': str(stage_of_charge),
-                    'MeasureValueType': 'DOUBLE',
-                },
+                    'Dimensions': dimensions,
+                    'MeasureName': 'StatusUpdate',
+                    'MeasureValue': str(rcv[-1]),
+                    'MeasureValueType': 'BIGINT',
+                    'Time': str(int(time.time())),
+                    'TimeUnit': 'SECONDS',
+                }
             ]
         )
-
-        time.sleep(1)
