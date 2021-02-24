@@ -1,5 +1,5 @@
 [Unit]
-Description=led blinking service
+Description=123\SmartBMS Monitor TimeStream push
 
 [Service]
 Type=simple
