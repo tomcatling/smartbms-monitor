@@ -27,7 +27,7 @@ while True:
         output = decode(rcv)
         dimensions = []
         for k,v in output.items():
-            print(str(k) + ':  ' + str(v))
+            # print(str(k) + ':  ' + str(v))
             dimensions.append({
                 'Name':k,
                 'Value':str(v),
