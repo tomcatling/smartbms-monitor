@@ -16,11 +16,12 @@ port = serial.Serial(
     dsrdtr = 0
 )
 port.reset_input_buffer()
+last_updated = time.time()
 
 while True:
     # wait for start bit
     rcv = bytearray(port.read(58))
-    if check_checksum(rcv):
+    if check_checksum(rcv) and (time.time() - last_updated) > 10:
         output = decode(rcv)
         dimensions = []
         for k,v in output.items():
@@ -44,3 +45,4 @@ while True:
                 }
             ]
         )
+        last_updated = time.time()
