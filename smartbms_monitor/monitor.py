@@ -1,6 +1,7 @@
 import serial
 import boto3
 import json
+import os
 import time
 from smartbms_monitor.utils import decode, check_checksum, print_packet
 
@@ -46,6 +47,6 @@ while True:
                 }
             ]
         )
-        with open('/bms_status.json','w') as f:
+        with open(os.environ['HOME']+'/bms_status.json','w') as f:
             f.write(json.dumps(output))
         last_updated = time.time()
