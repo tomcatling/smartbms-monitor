@@ -54,7 +54,10 @@ def check_checksum(packet):
     checksum = packet[-1]
     if all([int(i)==0 for i in packet]):
         return False
-    return checksum == gen_checksum(packet[:-1])
+    elif all([int(i)==255 for i in packet]):
+        return False
+    else:
+        return checksum == gen_checksum(packet[:-1])
 
 
 def print_packet(packet):
