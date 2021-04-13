@@ -2,7 +2,6 @@ import serial
 import boto3
 import json
 import os
-import time
 from smartbms_monitor.utils import decode, check_checksum, print_packet
 
 client = boto3.client('timestream-write')
@@ -18,12 +17,12 @@ port = serial.Serial(
     dsrdtr = 0
 )
 port.reset_input_buffer()
-last_updated = time.time()
+i=0
 
 while True:
     # wait for start bit
     rcv = bytearray(port.read(58))
-    if check_checksum(rcv) and (time.time() - last_updated) > 10:
+    if check_checksum(rcv):
         output = decode(rcv)
         dimensions = []
         for k,v in output.items():
@@ -47,6 +46,7 @@ while True:
                 }
             ]
         )
-        with open(os.environ['HOME']+'/bms_status.json','w') as f:
-            f.write(json.dumps(output))
-        last_updated = time.time()
+        i+=1
+        if i%100==0:
+            with open(os.environ['HOME']+'/bms_status.json','w') as f:
+                f.write(json.dumps(output))
